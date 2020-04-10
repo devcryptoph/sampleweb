@@ -42,7 +42,7 @@ spec:
       serviceAccountName: account-sampleweb
       containers:
       - name: sampleweb
-        image: docker.io/nginx:latest
+        image: docker.io/httpd:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
