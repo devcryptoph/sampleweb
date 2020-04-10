@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sampleweb
+  labels:
+    app: sampleweb
+    service: sampleweb
+spec:
+  ports:
+  - port: 80
+    name: http
+  selector:
+    app: sampleweb
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: account-sampleweb
+  labels:
+    account: sampleweb
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sampleweb-v1
+  labels:
+    app: sampleweb
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sampleweb
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: sampleweb
+        version: v1
+    spec:
+      serviceAccountName: account-sampleweb
+      containers:
+      - name: sampleweb
+        image: docker.io/nginx:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}
